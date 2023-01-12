@@ -4,7 +4,8 @@
 </script>
 
 <template>
-  HelloWorld
+  hello HelloWorld
+  
 </template>
 
 <style scoped>
