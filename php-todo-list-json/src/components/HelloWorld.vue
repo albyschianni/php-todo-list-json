@@ -6,13 +6,27 @@
 
   export default{
     name: 'HelloWorld',
+    data() {
+
+      return {
+
+        todoList: []
+      };
+    },
+    methods: {
+      
+      forSubmit(e)  {
+        e.preventDefault();
+        console.log('hello World');
+      }
+    },
     mounted(){
       axios.get(API_URL)
         .then(res => {
 
           const data = res.data;
 
-          console.log(data);
+          this.todoList = data;
         });
     }
   }
@@ -20,8 +34,23 @@
 </script>
 
 <template>
-  hello HelloWorld
+  <h1>HelloWorld To Do </h1> 
 
+  <ul>
+    <li v-for="(todoElem, ind) in todoList" :key="ind">
+        {{ todoElem.text }}
+    </li>
+  </ul>
+
+  <form @submit="forSubmit">
+    
+    <input type="submit" value="Aggiungi">
+
+  </form>
+
+
+
+  <!-- <input type="text"> -->
 </template>
 
 <style scoped>
