@@ -1,6 +1,25 @@
+<template>
+  <h1>TO DO LIST </h1> 
+
+  <ul>
+    <li v-for="(todoElem, ind) in todoList" :key="ind">
+        {{ todoElem.text }}
+    </li>
+  </ul>
+
+  <form @submit="createNewTask">
+    
+    <input type="text" name="text" v-model="newTodoText">
+    <input type="submit" value="Aggiungi">
+
+  </form>
+
+</template>
+
+
 <script>
 
-  const API_URL = "http://localhost:8888/api.php";
+  const API_URL = "http://localhost:8888/";
 
   import axios from 'axios';
 
@@ -10,48 +29,55 @@
 
       return {
 
-        todoList: []
+        todoList: [],
+        newTodoText:""
+
       };
     },
     methods: {
       
-      forSubmit(e)  {
+      getAllData() {
+
+        axios.get(API_URL + "api.php")
+          .then(res => {
+
+            const data = res.data;
+
+            this.todoList = data;
+          });
+      },
+      createNewTask(e){
+
         e.preventDefault();
-        console.log('hello World');
+
+        const newTodoText = this.newTodoText;
+        
+        const params = {params: {
+
+          "text": newTodoText
+
+        }};
+
+        axios.get(API_URL + "api_create_new_task.php", params)
+          .then(res => {
+
+            const data = res.data;
+
+            this.newTodoText = "" ;
+            this.getAllData();
+          });
       }
     },
     mounted(){
-      axios.get(API_URL)
-        .then(res => {
 
-          const data = res.data;
-
-          this.todoList = data;
-        });
+      this.getAllData();
     }
+
   }
 
 </script>
 
-<template>
-  <h1>HelloWorld To Do </h1> 
 
-  <ul>
-    <li v-for="(todoElem, ind) in todoList" :key="ind">
-        {{ todoElem.text }}
-    </li>
-  </ul>
-
-  <form @submit="forSubmit">
-    
-    <input type="submit" value="Aggiungi">
-
-  </form>
-
-
-
-  <!-- <input type="text"> -->
-</template>
 
 <style scoped>
 
